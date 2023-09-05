@@ -1,11 +1,35 @@
-import express, { Application } from "express";
-import cors from "cors";
+import { Server } from "http";
+import app from "./app";
+import config from "./config";
 
-const app: Application = express();
+async function bootstrap() {
+  const server: Server = app.listen(config.port, () => {
+    console.log(`Server running on port ${config.port}`);
+  });
 
-// cors middlewire
-app.use(cors());
+  const exitHandler = () => {
+    if (server) {
+      server.close(() => {
+        console.log("Server closed");
+      });
+    }
+    process.exit(1);
+  };
 
-// parser middlewires
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+  const unexpectedErrorHandler = (error: unknown) => {
+    console.log(error);
+    exitHandler();
+  };
+
+  process.on("uncaughtException", unexpectedErrorHandler);
+  process.on("unhandledRejection", unexpectedErrorHandler);
+
+  process.on("SIGTERM", () => {
+    console.log("SIGTERM received");
+    if (server) {
+      server.close();
+    }
+  });
+}
+
+bootstrap();
