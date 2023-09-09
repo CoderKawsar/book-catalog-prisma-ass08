@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response } from "express";
 
 type IApiReponse<T> = {
   statusCode: number;
@@ -6,7 +6,7 @@ type IApiReponse<T> = {
   message?: string | null;
   meta?: {
     page: number;
-    limit: number;
+    size: number;
     total: number;
   };
   data?: T | null;
