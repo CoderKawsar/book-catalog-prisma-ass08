@@ -3,11 +3,17 @@ import auth from "../../middlewares/auth";
 import validateRequest from "../../middlewares/validateRequest";
 import { ENUM_USER_ROLE } from "../../../enums/users";
 import { OrderController } from "./order.controller";
+import { OrderValidation } from "./order.validation";
 
 const router = Router();
 
 // create Order
-router.post("/", auth(ENUM_USER_ROLE.CUSTOMER), OrderController.createOrder);
+router.post(
+  "/",
+  auth(ENUM_USER_ROLE.CUSTOMER),
+  validateRequest(OrderValidation.create),
+  OrderController.createOrder
+);
 
 // get all Orders
 router.get(
@@ -22,18 +28,5 @@ router.get(
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
   OrderController.getSingleOrderById
 );
-
-/*
-// update single Order by id
-router.patch(
-  "/:id",
-  auth(ENUM_USER_ROLE.ADMIN),
-  validateRequest(OrderValidation.update),
-  OrderController.updateOrder
-);
-
-// delete single Order by id
-router.delete("/:id", auth(ENUM_USER_ROLE.ADMIN), OrderController.deleteOrder);
-*/
 
 export const OrderRouter = router;

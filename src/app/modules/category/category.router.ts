@@ -8,7 +8,12 @@ import { CategoryValidation } from "./category.validation";
 const router = Router();
 
 // create category
-router.post("/", auth(ENUM_USER_ROLE.ADMIN), CategoryController.createCategory);
+router.post(
+  "/",
+  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(CategoryValidation.create),
+  CategoryController.createCategory
+);
 
 // get all Categorys
 router.get("/", CategoryController.getAllCategories);

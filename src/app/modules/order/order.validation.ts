@@ -1,40 +1,25 @@
 import { z } from "zod";
 
+const OrderedBookSchema = z.object({
+  bookId: z.string({
+    required_error: "Book ID is required!",
+  }),
+  quantity: z
+    .number({
+      required_error: "Qunatity is required!",
+    })
+    .int(),
+});
+
 const create = z.object({
   body: z.object({
-    title: z.string({
-      required_error: "Title is required!",
+    userId: z.string({
+      required_error: "User ID is required!",
     }),
-    author: z.string({
-      required_error: "Author is required!",
-    }),
-    price: z.number({
-      required_error: "Price is required!",
-    }),
-    genre: z.string({
-      required_error: "Genre is required!",
-    }),
-    publicationDate: z.date({
-      required_error: "Publicaton date is required!",
-    }),
-    categoryId: z.date({
-      required_error: "Category ID is required!",
-    }),
+    orderedBooks: z.array(OrderedBookSchema),
   }),
 });
 
-const update = z.object({
-  body: z.object({
-    title: z.string().optional(),
-    author: z.string().optional(),
-    price: z.number().optional(),
-    genre: z.string().optional(),
-    publicationDate: z.date().optional(),
-    categoryId: z.date().optional(),
-  }),
-});
-
-export const BookValidation = {
+export const OrderValidation = {
   create,
-  update,
 };
