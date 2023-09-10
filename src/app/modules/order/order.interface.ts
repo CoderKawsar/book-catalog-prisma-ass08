@@ -5,3 +5,8 @@ export type ICreateOrderPayload = {
     quantity: number;
   }[];
 };
+
+export type IUserIdAndRole = {
+  userId: string;
+  role: string;
+};

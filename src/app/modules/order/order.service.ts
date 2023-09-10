@@ -3,6 +3,7 @@ import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
 import { ICreateOrderPayload } from "./order.interface";
+import { JwtPayload } from "jsonwebtoken";
 
 const createOrder = async (payload: ICreateOrderPayload): Promise<Order> => {
   let createdOrder: Order | undefined;
@@ -41,19 +42,47 @@ const createOrder = async (payload: ICreateOrderPayload): Promise<Order> => {
   return newOrder;
 };
 
-const getAllOrders = async (): Promise<Order[]> => {
-  const result = await prisma.order.findMany({
-    include: { orderedBooks: true },
-  });
+const getAllOrders = async (
+  userId: string,
+  userRole: string
+): Promise<Order[]> => {
+  let result: Order[] | undefined;
+
+  if (userRole === "admin") {
+    result = await prisma.order.findMany({
+      include: { orderedBooks: true },
+    });
+  }
+
+  if (userRole === "customer") {
+    result = await prisma.order.findMany({
+      where: { userId },
+      include: { orderedBooks: true },
+    });
+  }
+
+  if (!result?.length) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No order found!");
+  }
+
   return result;
 };
 
-const getSingleOrderById = async (id: string): Promise<Order | null> => {
+const getSingleOrderById = async (
+  orderId: string,
+  userId: string,
+  userRole: string
+): Promise<Order | null> => {
   const result = await prisma.order.findFirst({
-    where: { id },
+    where: { id: orderId },
     include: { orderedBooks: true },
   });
-  return result;
+
+  if (result?.userId === userId || userRole === "admin") {
+    return result;
+  } else {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized!");
+  }
 };
 
 /*

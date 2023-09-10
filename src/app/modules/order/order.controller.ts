@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import pick from "../../../shared/pick";
 import { OrderService } from "./order.service";
+import { IUserIdAndRole } from "./order.interface";
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   const result = await OrderService.createOrder(req.body);
@@ -17,7 +18,9 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllOrders = catchAsync(async (req: Request, res: Response) => {
-  const result = await OrderService.getAllOrders();
+  const { userId, role: userRole } = req.user as IUserIdAndRole;
+
+  const result = await OrderService.getAllOrders(userId, userRole);
 
   sendResponse(res, {
     success: true,
@@ -28,7 +31,14 @@ const getAllOrders = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleOrderById = catchAsync(async (req: Request, res: Response) => {
-  const result = await OrderService.getSingleOrderById(req.params.id);
+  const { id: orderId } = req.params;
+  const { userId, role: userRole } = req.user as IUserIdAndRole;
+
+  const result = await OrderService.getSingleOrderById(
+    orderId,
+    userId,
+    userRole
+  );
 
   sendResponse(res, {
     success: true,
