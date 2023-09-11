@@ -33,7 +33,7 @@
 
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/books/create-book (POST)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/books (GET)
-- https://book-catalog-prisma-ass08.vercel.app/api/v1/books/8a539eb0-4cd6-4a4c-82dc-6045e0e13a0d (GET)
+- https://book-catalog-prisma-ass08.vercel.app/api/v1/books/8a539eb0-4cd6-4a4c-82dc-6045e0e13a0d/category (GET)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/books/365d0bd8-c4f7-4ba0-8a19-db55cf8f4aff (GET)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/books/22961bbd-4705-43fc-8eaf-b4c696a2602b (PATCH)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/books/892ef8eb-c799-42df-9cd3-f674113a10b2 (DELETE)
