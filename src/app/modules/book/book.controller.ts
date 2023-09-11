@@ -41,33 +41,38 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getSingleBookById = catchAsync(async (req: Request, res: Response) => {
-  const options = pick(req.query, ["size", "page", "sortBy", "sortOrder"]);
+const getSingleBookOrCategoryBooksById = catchAsync(
+  async (req: Request, res: Response) => {
+    const options = pick(req.query, ["size", "page", "sortBy", "sortOrder"]);
 
-  const result = await BookService.getSingleBookById(req.params.id, options);
+    const result = await BookService.getSingleBookOrCategoryBooksById(
+      req.params.id,
+      options
+    );
 
-  if (typeof result === "object") {
-    if (
-      (result as IGenericResponse<Book[]>).hasOwnProperty("meta") &&
-      (result as IGenericResponse<Book[]>).hasOwnProperty("data")
-    ) {
-      sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.OK,
-        message: "Books fetched successfully!",
-        meta: (result as IGenericResponse<Book[]>).meta,
-        data: (result as IGenericResponse<Book[]>).data,
-      });
-    } else {
-      sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.OK,
-        message: "Book fetched successfully!",
-        data: result,
-      });
+    if (typeof result === "object") {
+      if (
+        (result as IGenericResponse<Book[]>).hasOwnProperty("meta") &&
+        (result as IGenericResponse<Book[]>).hasOwnProperty("data")
+      ) {
+        sendResponse(res, {
+          success: true,
+          statusCode: httpStatus.OK,
+          message: "Books fetched successfully!",
+          meta: (result as IGenericResponse<Book[]>).meta,
+          data: (result as IGenericResponse<Book[]>).data,
+        });
+      } else {
+        sendResponse(res, {
+          success: true,
+          statusCode: httpStatus.OK,
+          message: "Book fetched successfully!",
+          data: result,
+        });
+      }
     }
   }
-});
+);
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const result = await BookService.updateBook(req.params.id, req.body);
@@ -94,7 +99,7 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
 export const BookController = {
   createBook,
   getAllBooks,
-  getSingleBookById,
+  getSingleBookOrCategoryBooksById,
   updateBook,
   deleteBook,
 };

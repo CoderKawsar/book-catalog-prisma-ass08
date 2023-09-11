@@ -95,7 +95,10 @@ const getAllBooks = async (filters: IBookFilters, options: IBookOptions) => {
   };
 };
 
-const getSingleBookById = async (id: string, options: IBookOptions) => {
+const getSingleBookOrCategoryBooksById = async (
+  id: string,
+  options: IBookOptions
+) => {
   let result: Book | Book[] | null;
 
   result = await prisma.book.findFirst({
@@ -168,7 +171,7 @@ const deleteBook = async (id: string): Promise<Book> => {
 export const BookService = {
   createBook,
   getAllBooks,
-  getSingleBookById,
+  getSingleBookOrCategoryBooksById,
   updateBook,
   deleteBook,
 };

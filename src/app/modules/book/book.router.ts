@@ -17,7 +17,7 @@ router.get("/", BookController.getAllBooks);
 router.get(
   "/:id",
   auth(ENUM_USER_ROLE.ADMIN),
-  BookController.getSingleBookById
+  BookController.getSingleBookOrCategoryBooksById
 );
 
 // update single Book by id

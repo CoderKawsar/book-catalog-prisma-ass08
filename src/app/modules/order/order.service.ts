@@ -85,30 +85,6 @@ const getSingleOrderById = async (
   }
 };
 
-/*
-const updateOrder = async (
-  id: string,
-  payload: Partial<Order>
-): Promise<Order> => {
-  const result = await prisma.Order.update({
-    where: { id },
-    data: payload,
-    include: { category: true },
-  });
-
-  return result;
-};
-
-const deleteOrder = async (id: string): Promise<Order> => {
-  const result = await prisma.Order.delete({
-    where: { id },
-    include: { category: true },
-  });
-
-  return result;
-};
-*/
-
 export const OrderService = {
   createOrder,
   getAllOrders,
