@@ -95,24 +95,27 @@ const getAllBooks = async (filters: IBookFilters, options: IBookOptions) => {
   };
 };
 
-const getSingleBookOrCategoryBooksById = async (
-  id: string,
-  options: IBookOptions
-) => {
-  let result: Book | Book[] | null;
-
-  result = await prisma.book.findFirst({
+const getSingleBookById = async (id: string) => {
+  const result = await prisma.book.findFirst({
     where: { id },
     include: { category: true },
   });
-  if (result) {
-    return result;
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No book found!");
   }
 
+  return result;
+};
+
+const getBooksOfACategory = async (
+  categoryId: string,
+  options: IBookOptions
+) => {
   const { page, size, skip } = paginationHelpers.calculatePagination(options);
-  result = await prisma.book.findMany({
+  const result = await prisma.book.findMany({
     where: {
-      categoryId: id,
+      categoryId,
     },
     include: { category: true },
     skip,
@@ -126,7 +129,7 @@ const getSingleBookOrCategoryBooksById = async (
         },
   });
   const total = await prisma.book.count({
-    where: { categoryId: id },
+    where: { categoryId },
   });
 
   if (result.length) {
@@ -139,9 +142,7 @@ const getSingleBookOrCategoryBooksById = async (
       },
       data: result,
     };
-  }
-
-  if (!result) {
+  } else {
     throw new ApiError(httpStatus.NOT_FOUND, "No book found!");
   }
 };
@@ -171,7 +172,8 @@ const deleteBook = async (id: string): Promise<Book> => {
 export const BookService = {
   createBook,
   getAllBooks,
-  getSingleBookOrCategoryBooksById,
+  getSingleBookById,
+  getBooksOfACategory,
   updateBook,
   deleteBook,
 };

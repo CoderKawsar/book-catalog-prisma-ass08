@@ -9,7 +9,7 @@ const router = Router();
 
 // create category
 router.post(
-  "/",
+  "/create-category",
   auth(ENUM_USER_ROLE.ADMIN),
   validateRequest(CategoryValidation.create),
   CategoryController.createCategory

@@ -8,17 +8,20 @@ import { BookValidation } from "./book.validation";
 const router = Router();
 
 // create Book
-router.post("/", auth(ENUM_USER_ROLE.ADMIN), BookController.createBook);
+router.post(
+  "/create-book",
+  auth(ENUM_USER_ROLE.ADMIN),
+  BookController.createBook
+);
 
 // get all Books
 router.get("/", BookController.getAllBooks);
 
+// get books of a category
+router.get("/:categoryId/category", BookController.getBooksOfACategory);
+
 // get single Book by id
-router.get(
-  "/:id",
-  auth(ENUM_USER_ROLE.ADMIN),
-  BookController.getSingleBookOrCategoryBooksById
-);
+router.get("/:id", BookController.getSingleBookById);
 
 // update single Book by id
 router.patch(

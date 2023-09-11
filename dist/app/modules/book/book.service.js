@@ -111,19 +111,21 @@ const getAllBooks = (filters, options) => __awaiter(void 0, void 0, void 0, func
         data: result,
     };
 });
-const getSingleBookOrCategoryBooksById = (id, options) => __awaiter(void 0, void 0, void 0, function* () {
-    let result;
-    result = yield prisma_1.default.book.findFirst({
+const getSingleBookById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.book.findFirst({
         where: { id },
         include: { category: true },
     });
-    if (result) {
-        return result;
+    if (!result) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "No book found!");
     }
+    return result;
+});
+const getBooksOfACategory = (categoryId, options) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, size, skip } = paginationHelper_1.paginationHelpers.calculatePagination(options);
-    result = yield prisma_1.default.book.findMany({
+    const result = yield prisma_1.default.book.findMany({
         where: {
-            categoryId: id,
+            categoryId,
         },
         include: { category: true },
         skip,
@@ -137,7 +139,7 @@ const getSingleBookOrCategoryBooksById = (id, options) => __awaiter(void 0, void
             },
     });
     const total = yield prisma_1.default.book.count({
-        where: { categoryId: id },
+        where: { categoryId },
     });
     if (result.length) {
         return {
@@ -150,7 +152,7 @@ const getSingleBookOrCategoryBooksById = (id, options) => __awaiter(void 0, void
             data: result,
         };
     }
-    if (!result) {
+    else {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "No book found!");
     }
 });
@@ -172,7 +174,8 @@ const deleteBook = (id) => __awaiter(void 0, void 0, void 0, function* () {
 exports.BookService = {
     createBook,
     getAllBooks,
-    getSingleBookOrCategoryBooksById,
+    getSingleBookById,
+    getBooksOfACategory,
     updateBook,
     deleteBook,
 };

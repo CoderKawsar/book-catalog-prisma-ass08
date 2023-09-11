@@ -41,38 +41,32 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getSingleBookOrCategoryBooksById = catchAsync(
-  async (req: Request, res: Response) => {
-    const options = pick(req.query, ["size", "page", "sortBy", "sortOrder"]);
+const getSingleBookById = catchAsync(async (req: Request, res: Response) => {
+  const result = await BookService.getSingleBookById(req.params.id);
 
-    const result = await BookService.getSingleBookOrCategoryBooksById(
-      req.params.id,
-      options
-    );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Book fetched successfully!",
+    data: result,
+  });
+});
 
-    if (typeof result === "object") {
-      if (
-        (result as IGenericResponse<Book[]>).hasOwnProperty("meta") &&
-        (result as IGenericResponse<Book[]>).hasOwnProperty("data")
-      ) {
-        sendResponse(res, {
-          success: true,
-          statusCode: httpStatus.OK,
-          message: "Books fetched successfully!",
-          meta: (result as IGenericResponse<Book[]>).meta,
-          data: (result as IGenericResponse<Book[]>).data,
-        });
-      } else {
-        sendResponse(res, {
-          success: true,
-          statusCode: httpStatus.OK,
-          message: "Book fetched successfully!",
-          data: result,
-        });
-      }
-    }
-  }
-);
+const getBooksOfACategory = catchAsync(async (req: Request, res: Response) => {
+  const options = pick(req.query, ["size", "page", "sortBy", "sortOrder"]);
+  const result = await BookService.getBooksOfACategory(
+    req.params.categoryId,
+    options
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Books fetched successfully!",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
   const result = await BookService.updateBook(req.params.id, req.body);
@@ -99,7 +93,8 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
 export const BookController = {
   createBook,
   getAllBooks,
-  getSingleBookOrCategoryBooksById,
+  getSingleBookById,
+  getBooksOfACategory,
   updateBook,
   deleteBook,
 };

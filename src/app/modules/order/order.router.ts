@@ -9,7 +9,7 @@ const router = Router();
 
 // create Order
 router.post(
-  "/",
+  "/create-order",
   auth(ENUM_USER_ROLE.CUSTOMER),
   validateRequest(OrderValidation.create),
   OrderController.createOrder

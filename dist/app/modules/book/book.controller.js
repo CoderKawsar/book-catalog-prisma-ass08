@@ -47,29 +47,25 @@ const getAllBooks = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result.data,
     });
 }));
-const getSingleBookOrCategoryBooksById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getSingleBookById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield book_service_1.BookService.getSingleBookById(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Book fetched successfully!",
+        data: result,
+    });
+}));
+const getBooksOfACategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const options = (0, pick_1.default)(req.query, ["size", "page", "sortBy", "sortOrder"]);
-    const result = yield book_service_1.BookService.getSingleBookOrCategoryBooksById(req.params.id, options);
-    if (typeof result === "object") {
-        if (result.hasOwnProperty("meta") &&
-            result.hasOwnProperty("data")) {
-            (0, sendResponse_1.default)(res, {
-                success: true,
-                statusCode: http_status_1.default.OK,
-                message: "Books fetched successfully!",
-                meta: result.meta,
-                data: result.data,
-            });
-        }
-        else {
-            (0, sendResponse_1.default)(res, {
-                success: true,
-                statusCode: http_status_1.default.OK,
-                message: "Book fetched successfully!",
-                data: result,
-            });
-        }
-    }
+    const result = yield book_service_1.BookService.getBooksOfACategory(req.params.categoryId, options);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Books fetched successfully!",
+        meta: result.meta,
+        data: result.data,
+    });
 }));
 const updateBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield book_service_1.BookService.updateBook(req.params.id, req.body);
@@ -92,7 +88,8 @@ const deleteBook = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 exports.BookController = {
     createBook,
     getAllBooks,
-    getSingleBookOrCategoryBooksById,
+    getSingleBookById,
+    getBooksOfACategory,
     updateBook,
     deleteBook,
 };

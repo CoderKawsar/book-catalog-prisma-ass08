@@ -17,7 +17,7 @@
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/auth/signup (POST)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/users (GET)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/users/2d2cab43-3d37-4c76-a8f6-1979e2c93868 (Single GET)
-- https://book-catalog-prisma-ass08.vercel.app/api/v1/users/2dcbb16a-d483-44b0-b3b6-1b4027f80111 (PATCH)
+- https://book-catalog-prisma-ass08.vercel.app/api/v1/users/06470aba-301e-4b81-a98f-2167f0aade1f (PATCH)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/users/06470aba-301e-4b81-a98f-2167f0aade1f (DELETE)
 - https://book-catalog-prisma-ass08.vercel.app/api/v1/profile (GET)
 

@@ -12,7 +12,7 @@ const category_controller_1 = require("./category.controller");
 const category_validation_1 = require("./category.validation");
 const router = (0, express_1.Router)();
 // create category
-router.post("/", (0, auth_1.default)(users_1.ENUM_USER_ROLE.ADMIN), (0, validateRequest_1.default)(category_validation_1.CategoryValidation.create), category_controller_1.CategoryController.createCategory);
+router.post("/create-category", (0, auth_1.default)(users_1.ENUM_USER_ROLE.ADMIN), (0, validateRequest_1.default)(category_validation_1.CategoryValidation.create), category_controller_1.CategoryController.createCategory);
 // get all Categorys
 router.get("/", category_controller_1.CategoryController.getAllCategories);
 // get single Category by id
