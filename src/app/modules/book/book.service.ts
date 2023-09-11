@@ -3,6 +3,8 @@ import prisma from "../../../shared/prisma";
 import { IBookFilters, IBookOptions } from "./book.interface";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
 import { BookSearchableFields } from "./book.constants";
+import ApiError from "../../../errors/ApiError";
+import httpStatus from "http-status";
 
 const createBook = async (data: Book): Promise<Book> => {
   const result = await prisma.book.create({
@@ -93,12 +95,52 @@ const getAllBooks = async (filters: IBookFilters, options: IBookOptions) => {
   };
 };
 
-const getSingleBookById = async (id: string): Promise<Book | null> => {
-  const result = await prisma.book.findFirst({
+const getSingleBookById = async (id: string, options: IBookOptions) => {
+  let result: Book | Book[] | null;
+
+  result = await prisma.book.findFirst({
     where: { id },
     include: { category: true },
   });
-  return result;
+  if (result) {
+    return result;
+  }
+
+  const { page, size, skip } = paginationHelpers.calculatePagination(options);
+  result = await prisma.book.findMany({
+    where: {
+      categoryId: id,
+    },
+    include: { category: true },
+    skip,
+    take: size,
+    orderBy: options.sortBy
+      ? {
+          [options.sortBy]: options.sortOrder || "asc",
+        }
+      : {
+          title: "asc",
+        },
+  });
+  const total = await prisma.book.count({
+    where: { categoryId: id },
+  });
+
+  if (result.length) {
+    return {
+      meta: {
+        page,
+        size,
+        total,
+        totalPage: Math.ceil(total / size),
+      },
+      data: result,
+    };
+  }
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No book found!");
+  }
 };
 
 const updateBook = async (

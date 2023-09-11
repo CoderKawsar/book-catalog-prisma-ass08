@@ -1,11 +1,14 @@
-import { IGenericErrorMessage } from './error';
+import { IGenericErrorMessage } from "./error";
+
+export type IMeta = {
+  page: number;
+  size: number;
+  total: number;
+  totalPage: number;
+};
 
 export type IGenericResponse<T> = {
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-  };
+  meta: IMeta;
   data: T;
 };
 

@@ -5,6 +5,8 @@ import catchAsync from "../../../shared/catchAsync";
 import { BookService } from "./book.service";
 import pick from "../../../shared/pick";
 import { BookFilterableFields } from "./book.constants";
+import { IGenericResponse, IMeta } from "../../../interfaces/common";
+import { Book } from "@prisma/client";
 
 const createBook = catchAsync(async (req: Request, res: Response) => {
   const result = await BookService.createBook(req.body);
@@ -40,14 +42,31 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleBookById = catchAsync(async (req: Request, res: Response) => {
-  const result = await BookService.getSingleBookById(req.params.id);
+  const options = pick(req.query, ["size", "page", "sortBy", "sortOrder"]);
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "Book fetched successfully!",
-    data: result,
-  });
+  const result = await BookService.getSingleBookById(req.params.id, options);
+
+  if (typeof result === "object") {
+    if (
+      (result as IGenericResponse<Book[]>).hasOwnProperty("meta") &&
+      (result as IGenericResponse<Book[]>).hasOwnProperty("data")
+    ) {
+      sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Books fetched successfully!",
+        meta: (result as IGenericResponse<Book[]>).meta,
+        data: (result as IGenericResponse<Book[]>).data,
+      });
+    } else {
+      sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Book fetched successfully!",
+        data: result,
+      });
+    }
+  }
 });
 
 const updateBook = catchAsync(async (req: Request, res: Response) => {
