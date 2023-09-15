@@ -10,6 +10,10 @@
 <u>Email:</u> customer@gmail.com <br>
 <u>Password:</u> 123456
 
+### Login route(POST):
+
+URL: https://book-catalog-prisma-ass08.vercel.app/api/v1/auth/login
+
 ### Application Routes:
 
 #### User
