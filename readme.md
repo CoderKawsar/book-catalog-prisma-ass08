@@ -12,7 +12,7 @@
 
 ### Login route(POST):
 
-URL: https://book-catalog-prisma-ass08.vercel.app/api/v1/auth/login
+URL: https://book-catalog-prisma-ass08.vercel.app/api/v1/auth/signin
 
 ### Application Routes:
 
