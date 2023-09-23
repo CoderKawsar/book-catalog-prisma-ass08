@@ -19,11 +19,11 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
 const login = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.login(req.body);
 
-  sendResponse(res, {
+  res.send({
     success: true,
     statusCode: httpStatus.OK,
-    message: "User logged in successfully!",
-    data: { token: result.token },
+    message: "User signin successfully!",
+    token: result.token,
   });
 });
 
